@@ -13,7 +13,7 @@ import pandas as pd
 # it seems generally normal aggregation seems to be standard procedure
 # Based on literature: use median (less sensitive to outliers) instead of mean, for the CNV patterns
 
-def norm_bulk_sc_cnv(df_sc_cnv: pd.DataFrame) -> pd.DataFrame:
+def bulk_sc_cnv(df_sc_cnv: pd.DataFrame) -> pd.DataFrame:
     """
     Parameters
     ----------
