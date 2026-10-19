@@ -25,21 +25,23 @@ if __name__ == "__main__":
 
     # import central df
     df_conn__meth_scRNA = pd.read_csv(p_file_methyl_scRNA_connect, index_col = "ID").dropna(subset=["Sentrix ID path", "KK-Nummer - fixed RNA"])
+    dict_json_out = {}  # add all different comparison options with name for visualization
     for idx, row in df_conn__meth_scRNA.iterrows():
         dict_rename_cols = {
             'Chromosome': 'CHR',
             'Start': 'START',
             'End': 'END',
-            row["Sentrix ID path"].stem.replace("_CNV", ""): "bulk_profile"
+            Path(row["Sentrix ID path"]).stem.replace("_CNV", ""): "bulk_profile"
         }
         # dataframes import
         methyl_df = pd.read_csv(row["Sentrix ID path"], sep="\t").drop("Feature", axis=1).rename(dict_rename_cols, axis=1)
-        scRNA_df = pd.read_csv(p_dir_scRNA_csv / f"{row['KK-Nummer - fixed RNA']}__cnv_mtx.csv")
+        scRNA_df = pd.read_csv(p_dir_scRNA_csv / f"{row['KK-Nummer - fixed RNA']}__cnv_mtx.csv", index_col="Gene")
+        scRNA_df.index.name = "index"
         scRNA_df_bulk = bulk_sc_cnv(scRNA_df.copy())
         # alignment
         dict_chr_bin_algined = mult_algin_bins(scRNA_df_bulk, methyl_df)
+        print(dict_chr_bin_algined)
         df_rebin__rna = bin_size_norm(dict_chr_bin_algined["rna_cnv_reshaped"], bin_size_set)
         df_rebin__methyl = bin_size_norm(dict_chr_bin_algined["methyl_cnv_reshaped"], bin_size_set)
 
-        dict_json_out = {}  # add all different comparison options with name for visualization
 

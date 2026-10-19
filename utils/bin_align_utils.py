@@ -82,7 +82,7 @@ def mult_algin_bins(df_rnaCNVbulk: pd.DataFrame,
                                   "indexMethyl": int,
                                   "indexRNA": int})
 
-    df_rnaCNVbulk_reshape = df_rnaCNVbulk.copy().loc[list(df_concat["indexRNA"]), :]
+    df_rnaCNVbulk_reshape = df_rnaCNV.copy().loc[list(df_concat["indexRNA"]), :]
     df_methylCNV_reshape = df_methylCNV.copy().loc[list(df_concat["indexMethyl"]), :]
 
     return {"rna_cnv_reshaped": df_rnaCNVbulk_reshape,
@@ -165,7 +165,7 @@ def mult_chr_bin_match(chr_tag: str,
     return {chr_tag: pd.DataFrame({"CHR": chr_list,
                                    "START": start_list,
                                    "END": end_list,
-                                   "indexDNA": index1,
+                                   "indexMethyl": index1,
                                    "indexRNA": index2})}
 
 

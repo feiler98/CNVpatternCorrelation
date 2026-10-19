@@ -25,7 +25,7 @@ def bulk_sc_cnv(df_sc_cnv: pd.DataFrame) -> pd.DataFrame:
         DataFrame with shape: ["CHR", "START", "END", "bulk_profile"]
         with 'bulk_profile' calculated as the median of each genomic bin
     """
-    df_idx_slice, df_cells = df_sc_cnv.copy()[["CHR", "START", "END"]], df_sc_cnv.copy().drop(["CHR", "START", "END"])
+    df_idx_slice, df_cells = df_sc_cnv.copy()[["CHR", "START", "END"]], df_sc_cnv.copy().drop(["CHR", "START", "END"], axis=1)
     # function across columns (cells), for every row (genomic bin)
     median_df = df_cells.median(axis=1).to_frame(name="bulk_profile")
     return pd.concat([df_idx_slice, median_df], axis=1)
