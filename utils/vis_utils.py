@@ -7,7 +7,7 @@ from pathlib import Path
 # ----------------------------------------------------------------------------------------------------------------------
 
 
-def gen_boxplot_cnv_spearman(dict_boxplots: dict,
+def vis_boxplot_cnv_spearman(dict_boxplots: dict,
                              title: str | None = None,
                              out_dir: Path | str | None = Path.cwd(),
                              show: bool = True,
@@ -50,15 +50,17 @@ def gen_boxplot_cnv_spearman(dict_boxplots: dict,
         plt.rcParams['boxplot.medianprops.linewidth'] = 2.5
         sns.despine()
     title = str(title) if title is not None else 'Spearman Correlation of Methylation x Pseudobulk-scRNA CNV Patterns'
-    fig, ax = plt.subplots()
+
+    fig, ax = plt.subplots(figsize=(7+0.4*len(dict_boxplots), 7))
     ax.boxplot(dict_boxplots.values())
     ax.set_title(
         f"Boxplot | {title}")
+    plt.xticks(rotation=45, ha="right")
     ax.set_xlabel("genomic sections")
     ax.set_ylabel("CNV spearman correlation [methyl x pseudobulk-scRNA]")
     ax.set_xticklabels(dict_boxplots.keys())
     if show:
         plt.show()
     if out_dir is not None:
-        plt.savefig(out_dir / f"boxplot__{title.replace(" ", "_")}")
+        plt.savefig(out_dir / f"boxplot__{title.replace(" ", "_")}", dpi=300, bbox_inches="tight")
     plt.rcParams.update(plt.rcParamsDefault)

@@ -8,7 +8,8 @@ from utils import (save_as_json_dict,
                    dict_q_arm_start__hg38,
                    bulk_sc_cnv,
                    mult_algin_bins,
-                   bin_size_norm)
+                   bin_size_norm,
+                   vis_boxplot_cnv_spearman)
 # ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -94,15 +95,19 @@ if __name__ == "__main__":
                 dict_extend = dict_json_out["chr_seg_arm"].copy()
                 dict_extend[full_tag] = spearman_score
                 dict_json_out["chr_seg_arm"] = dict_extend
-                if full_tag not in chr_dict.keys():
+                if full_tag not in chr_arm_dict.keys():
                     chr_arm_dict[full_tag] = [spearman_score]
                 else:
                     list_append = chr_arm_dict[full_tag].copy()
                     list_append.append(spearman_score)
                     chr_arm_dict[full_tag] = list_append
-        # --------------------------------------------------------------------------------------------------------------
-        print(dict_json_out)
-        print(genome_dict)
-        print(chr_dict)
-        print(chr_arm_dict)
 
+        # --------------------------------------------------------------------------------------------------------------
+        save_as_json_dict(dict_json_out, str(out_path), f"spearman_summary__{row['KK-Nummer - fixed RNA']}")
+
+    save_as_json_dict(genome_dict, str(out_path), f"spearman_summary__genome_total")
+    save_as_json_dict(chr_dict, str(out_path), f"spearman_summary__chr_resolved_total")
+    save_as_json_dict(chr_arm_dict, str(out_path), f"spearman_summary__chr_arm_resolved_total")
+    vis_boxplot_cnv_spearman(genome_dict, title="Total Genome", show=False, out_dir=out_path)
+    vis_boxplot_cnv_spearman(chr_dict, title="Chromosome Resolved", show=False, out_dir=out_path)
+    vis_boxplot_cnv_spearman(chr_arm_dict, title="Chromosome Arm Resolved", show=False, out_dir=out_path)
