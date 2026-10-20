@@ -12,6 +12,7 @@ import pandas as pd
 # --------------------------------------------------
 # it seems generally normal aggregation seems to be standard procedure
 # Based on literature: use median (less sensitive to outliers) instead of mean, for the CNV patterns
+# Update --> so median straight up fails most of the time --> swap to mean
 
 def bulk_sc_cnv(df_sc_cnv: pd.DataFrame) -> pd.DataFrame:
     """
@@ -27,5 +28,5 @@ def bulk_sc_cnv(df_sc_cnv: pd.DataFrame) -> pd.DataFrame:
     """
     df_idx_slice, df_cells = df_sc_cnv.copy()[["CHR", "START", "END"]], df_sc_cnv.copy().drop(["CHR", "START", "END"], axis=1)
     # function across columns (cells), for every row (genomic bin)
-    median_df = df_cells.median(axis=1).to_frame(name="bulk_profile")
+    median_df = df_cells.mean(axis=1).to_frame(name="bulk_profile")
     return pd.concat([df_idx_slice, median_df], axis=1)

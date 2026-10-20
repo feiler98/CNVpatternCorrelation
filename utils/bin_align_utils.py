@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 # ----------------------------------------------------------------------------------------------------------------------
 
+# https://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/cytoBand.txt.gz
 dict_q_arm_start__hg38 = {
     'chr1': 123400000,
     'chr10': 39800000,
