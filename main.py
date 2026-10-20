@@ -40,8 +40,18 @@ if __name__ == "__main__":
         scRNA_df_bulk = bulk_sc_cnv(scRNA_df.copy())
         # alignment
         dict_chr_bin_algined = mult_algin_bins(scRNA_df_bulk, methyl_df)
-        print(dict_chr_bin_algined)
-        df_rebin__rna = bin_size_norm(dict_chr_bin_algined["rna_cnv_reshaped"], bin_size_set)
-        df_rebin__methyl = bin_size_norm(dict_chr_bin_algined["methyl_cnv_reshaped"], bin_size_set)
+        df_bin_align__rna = dict_chr_bin_algined["rna_cnv_reshaped"].drop("index", axis=1).reset_index()
+        df_bin_align__methyl = dict_chr_bin_algined["methyl_cnv_reshaped"].drop("index", axis=1).reset_index()
+        # concat and reassign START and END positions based on rule: take bigger number START, take lower number STOP per index
+        df_concat_signatures = pd.concat([df_bin_align__rna[["CHR", "bulk_profile"]],
+                                          df_bin_align__methyl[["bulk_profile"]]],
+                                         axis=1)
+        df_concat_signatures["START"] = [pos_rna if pos_rna >= pos_methyl else pos_methyl for pos_rna, pos_methyl in
+                                         zip(df_bin_align__rna["START"], df_bin_align__methyl["START"])]
+        df_concat_signatures["END"] = [pos_rna if pos_rna <= pos_methyl else pos_methyl for pos_rna, pos_methyl in
+                                         zip(df_bin_align__rna["END"], df_bin_align__methyl["END"])]
+        df_normbin_signatures = bin_size_norm(df_concat_signatures, bin_size_set)
+
+
 
 
